@@ -12,7 +12,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,14 +23,14 @@ public class NewInventoryListener {
 
     @Transactional
     @JmsListener(destination = JmsConfig.NEW_INVENTORY_QUEUE)
-    public void listen(NewInventoryEvent event){
+    public void listen(NewInventoryEvent event) {
         BeerDto beerDto = event.getBeerDto();
 
-        Optional<BeerInventory> beerInventoryOptional = beerInventoryRepository.findByUpc(beerDto.getUpc());
-        beerInventoryOptional.ifPresent(beerInventory -> {
-            beerInventory.setQuantityOnHand(beerDto.getQuantityOnHand());
-            log.debug("Inventory updated: " + beerInventory.getUpc() + " Quantity: " + beerInventory.getQuantityOnHand());
-            beerInventoryRepository.save(beerInventory);
-        });
+        beerInventoryRepository.save(BeerInventory
+                .builder()
+                .beerId(beerDto.getId())
+                .upc(beerDto.getUpc())
+                .quantityOnHand(beerDto.getQuantityOnHand())
+                .build());
     }
 }
