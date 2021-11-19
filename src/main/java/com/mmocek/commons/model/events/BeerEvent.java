@@ -1,6 +1,6 @@
-package guru.sfg.beer.inventory.service.events;
+package com.mmocek.commons.model.events;
 
-import guru.sfg.beer.inventory.service.web.model.BeerDto;
+import com.mmocek.commons.model.BeerDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
